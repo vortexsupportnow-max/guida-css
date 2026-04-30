@@ -206,6 +206,42 @@ h4.sub-sub{font-family:'DM Mono',monospace;font-size:.82rem;letter-spacing:.16em
 #btt.show{opacity:1;transform:translateY(0)}
 #btt:hover{background:var(--white)}
 
+/* AD BANNER — sidebar */
+.toc-ad{margin:1.5rem 1rem;padding:1.2rem 1.2rem 1.4rem;border:1px solid var(--lime-border);background:rgba(198,255,51,.04);position:relative;overflow:hidden;text-decoration:none;display:block;transition:border-color .3s,background .3s}
+.toc-ad:hover{border-color:rgba(198,255,51,.5);background:rgba(198,255,51,.08)}
+.toc-ad::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--lime)}
+.toc-ad-tag{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(198,255,51,.45);margin-bottom:.55rem}
+.toc-ad-name{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.1em;color:var(--lime);line-height:1;margin-bottom:.4rem}
+.toc-ad-desc{font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(255,255,255,.38);line-height:1.55}
+.toc-ad-cta{margin-top:.8rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);display:inline-flex;align-items:center;gap:.4rem}
+.toc-ad-cta::after{content:'→'}
+
+/* AD BANNER — full width promo */
+.promo-banner{margin:0;padding:5rem 6vw;border-bottom:1px solid var(--lime-border);background:rgba(198,255,51,.03);position:relative;overflow:hidden;text-decoration:none;display:block;transition:background .3s}
+.promo-banner:hover{background:rgba(198,255,51,.06)}
+.promo-banner::before{content:'VORTEX';position:absolute;right:-1vw;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:22vw;color:rgba(198,255,51,.03);line-height:1;pointer-events:none;letter-spacing:-.02em;white-space:nowrap}
+.promo-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
+.promo-text-block{}
+.promo-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(198,255,51,.55);display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.promo-eyebrow::before{content:'';width:28px;height:1px;background:rgba(198,255,51,.55)}
+.promo-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4.2rem);line-height:.95;letter-spacing:.02em;color:var(--white)}
+.promo-title span{color:var(--lime)}
+.promo-subtitle{margin-top:1.2rem;font-size:.95rem;line-height:1.75;color:var(--muted);max-width:480px}
+.promo-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:.8rem;padding:1rem 2.2rem;background:var(--lime);color:var(--black);font-family:'DM Mono',monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;white-space:nowrap;transition:background .2s,transform .2s}
+.promo-btn:hover{background:var(--white);transform:translateY(-2px)}
+.promo-btn-arrow{font-size:1rem}
+
+/* AD BANNER — inline strip */
+.ad-strip{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;padding:2rem 6vw;border-top:1px solid var(--lime-border);border-bottom:1px solid var(--lime-border);background:rgba(198,255,51,.025);text-decoration:none;transition:background .3s}
+.ad-strip:hover{background:rgba(198,255,51,.05)}
+.ad-strip-left{display:flex;align-items:center;gap:1.4rem}
+.ad-strip-logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.12em;color:var(--lime)}
+.ad-strip-sep{width:1px;height:36px;background:var(--lime-border)}
+.ad-strip-copy{font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.6}
+.ad-strip-copy strong{color:rgba(255,255,255,.75)}
+.ad-strip-cta{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--lime-border);padding:.6rem 1.4rem;transition:border-color .2s,color .2s}
+.ad-strip:hover .ad-strip-cta{border-color:var(--lime);color:var(--lime)}
+
 /* FOOTER */
 footer{padding:2.5rem 6vw;border-top:1px solid var(--lime-border);display:flex;align-items:center;justify-content:space-between;background:var(--gray)}
 .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:rgba(198,255,51,.4);letter-spacing:.15em}
@@ -231,7 +267,7 @@ code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);backgrou
 
 <nav>
   <div style="display:flex;align-items:baseline">
-    <a href="#hero" class="nav-logo">VORTEX</a>
+    <a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" class="nav-logo">VORTEX</a>
     <span class="nav-sub">/ CSS Guide</span>
   </div>
   <div class="nav-right">
@@ -273,6 +309,13 @@ code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);backgrou
     <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(198,255,51,.3);margin-bottom:.5rem">Standard</div>
     <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:rgba(255,255,255,.3)">CSS Level 4 · 2025</div>
   </div>
+
+  <a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" class="toc-ad">
+    <div class="toc-ad-tag">Sponsorizzato</div>
+    <div class="toc-ad-name">VORTEX</div>
+    <div class="toc-ad-desc">Soluzioni digitali su misura per il tuo business — design, sviluppo e innovazione.</div>
+    <div class="toc-ad-cta">Scopri di più</div>
+  </a>
 </aside>
 
 <main>
@@ -808,6 +851,19 @@ code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);backgrou
 <!-- ══════════════════════════════════ -->
 <!-- 08 — CSS GRID                     -->
 <!-- ══════════════════════════════════ -->
+
+<!-- PROMO BANNER — Vortex -->
+<a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" class="promo-banner">
+  <div class="promo-inner">
+    <div class="promo-text-block">
+      <div class="promo-eyebrow">Realizzato da Vortex</div>
+      <h2 class="promo-title">Design &amp;<br><span>Sviluppo Web</span><br>al livello successivo.</h2>
+      <p class="promo-subtitle">Vortex trasforma le tue idee in esperienze digitali straordinarie. Siti web, applicazioni e brand identity che fanno la differenza.</p>
+    </div>
+    <span class="promo-btn">Visita Vortex <span class="promo-btn-arrow">→</span></span>
+  </div>
+</a>
+
 <section class="chapter" id="grid">
   <div class="chapter-header reveal">
     <div class="chapter-num">Capitolo 08</div>
@@ -1326,6 +1382,17 @@ code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);backgrou
 <!-- ══════════════════════════════════ -->
 <!-- 15 — BEST PRACTICE                -->
 <!-- ══════════════════════════════════ -->
+
+<!-- AD STRIP — Vortex -->
+<a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" class="ad-strip">
+  <div class="ad-strip-left">
+    <div class="ad-strip-logo">VORTEX</div>
+    <div class="ad-strip-sep"></div>
+    <div class="ad-strip-copy"><strong>Il tuo prossimo progetto digitale</strong><br>Siti web · App · Brand identity · UI/UX Design</div>
+  </div>
+  <div class="ad-strip-cta">Scopri Vortex →</div>
+</a>
+
 <section class="chapter" id="best">
   <div class="chapter-header reveal">
     <div class="chapter-num">Capitolo 15</div>
@@ -1399,8 +1466,9 @@ code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);backgrou
 </section>
 
 <footer>
-  <div class="footer-logo">VORTEX</div>
+  <a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" class="footer-logo" style="text-decoration:none;color:rgba(198,255,51,.6);transition:color .2s" onmouseenter="this.style.color='#C6FF33'" onmouseleave="this.style.color='rgba(198,255,51,.6)'">VORTEX</a>
   <div class="footer-copy">CSS Guide 2025 · CSS Level 4</div>
+  <a href="https://vortex-official-site.vercel.app" target="_blank" rel="noopener" style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(198,255,51,.45);text-decoration:none;border:1px solid rgba(198,255,51,.2);padding:.45rem 1rem;transition:border-color .2s,color .2s" onmouseenter="this.style.borderColor='rgba(198,255,51,.5)';this.style.color='#C6FF33'" onmouseleave="this.style.borderColor='rgba(198,255,51,.2)';this.style.color='rgba(198,255,51,.45)'">vortex-official-site.vercel.app →</a>
 </footer>
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Torna in cima">↑</button>
 
