@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS — Guida Completa · Vortex</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #000000;
+  --lime: #C6FF33;
+  --white: #FFFFFF;
+  --gray: #0e0e0e;
+  --gray2: #1a1a1a;
+  --muted: rgba(255,255,255,.55);
+  --lime-dim: rgba(198,255,51,.1);
+  --lime-border: rgba(198,255,51,.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none}
+body::before{content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+
+/* CURSOR */
+#cur{position:fixed;width:12px;height:12px;background:var(--lime);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s;mix-blend-mode:difference}
+#cur-ring{position:fixed;width:36px;height:36px;border:1px solid var(--lime);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:opacity .2s;opacity:.45}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 4vw;height:64px;border-bottom:1px solid var(--lime-border);background:rgba(0,0,0,.9);backdrop-filter:blur(14px)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.15em;color:var(--lime);text-decoration:none}
+.nav-sub{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-left:.6rem}
+.nav-right{display:flex;align-items:center;gap:1.8rem}
+.nav-right a{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.nav-right a:hover{color:var(--lime)}
+.progress-bar{position:fixed;top:64px;left:0;height:2px;background:var(--lime);width:0%;z-index:1001;transition:width .1s linear}
+
+/* SIDEBAR */
+#toc{position:fixed;left:0;top:64px;bottom:0;width:240px;border-right:1px solid var(--lime-border);overflow-y:auto;padding:2rem 0;background:rgba(0,0,0,.95);z-index:900;scrollbar-width:thin;scrollbar-color:var(--lime-border) transparent}
+#toc::-webkit-scrollbar{width:3px}
+#toc::-webkit-scrollbar-thumb{background:var(--lime-border);border-radius:2px}
+.toc-section-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(198,255,51,.4);padding:.5rem 1.8rem;margin-top:1rem}
+.toc-link{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.8rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.06em;color:rgba(255,255,255,.4);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.toc-link:hover,.toc-link.active{color:var(--lime);border-left-color:var(--lime);background:rgba(198,255,51,.04)}
+.toc-num{color:rgba(198,255,51,.35);font-size:.62rem;min-width:18px}
+
+/* MAIN */
+main{margin-left:240px;padding-top:64px}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:8rem 8vw 6rem;border-bottom:1px solid var(--lime-border);position:relative;overflow:hidden}
+.hero-bg-text{position:absolute;right:-2vw;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:32vw;color:rgba(198,255,51,.03);line-height:1;pointer-events:none;letter-spacing:-.02em;white-space:nowrap}
+.hero-tag{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--lime);display:flex;align-items:center;gap:1rem;margin-bottom:2rem;opacity:0;animation:fadeUp .8s ease .3s forwards}
+.hero-tag::before{content:'';width:32px;height:1px;background:var(--lime)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,12vw,11rem);line-height:.9;letter-spacing:.01em;opacity:0;animation:fadeUp .9s ease .5s forwards}
+.hero-title span{color:var(--lime)}
+.hero-subtitle{margin-top:2.5rem;max-width:600px;font-size:1.05rem;line-height:1.85;color:var(--muted);opacity:0;animation:fadeUp .9s ease .7s forwards}
+.hero-meta{margin-top:3rem;display:flex;gap:3rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s ease .9s forwards}
+.hero-meta-item{display:flex;flex-direction:column;gap:.3rem}
+.hero-meta-num{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--lime);line-height:1;letter-spacing:.04em}
+.hero-meta-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.scroll-line{margin-top:4rem;width:1px;height:60px;background:linear-gradient(to bottom,var(--lime),transparent);animation:scrollPulse 2s ease infinite}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* CHAPTERS */
+.chapter{padding:8rem 6vw 6rem;border-bottom:1px solid rgba(198,255,51,.07)}
+.chapter-header{margin-bottom:5rem}
+.chapter-num{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(198,255,51,.5);display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.chapter-num::before{content:'';width:24px;height:1px;background:rgba(198,255,51,.5)}
+.chapter-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);line-height:.95;letter-spacing:.02em}
+.chapter-title span{color:var(--lime)}
+.chapter-intro{margin-top:1.8rem;max-width:700px;font-size:1rem;line-height:1.9;color:var(--muted)}
+
+/* TEXT */
+.prose{font-size:1rem;line-height:1.9;color:rgba(255,255,255,.72);margin-bottom:1.6rem}
+.prose strong{color:var(--white);font-weight:700}
+.prose em{color:var(--lime);font-style:normal}
+h3.sub-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;margin:3.5rem 0 1.2rem;color:var(--white)}
+h3.sub-title span{color:var(--lime)}
+h4.sub-sub{font-family:'DM Mono',monospace;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(198,255,51,.7);margin:2.5rem 0 .8rem;padding-bottom:.5rem;border-bottom:1px solid rgba(198,255,51,.15)}
+
+/* CODE */
+.code-block{background:var(--gray);border:1px solid var(--lime-border);border-left:3px solid var(--lime);padding:2rem 2.2rem;margin:2rem 0;position:relative;overflow-x:auto}
+.code-block-label{position:absolute;top:0;right:0;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--black);background:var(--lime);padding:4px 12px}
+.code-block pre{font-family:'DM Mono',monospace;font-size:.83rem;line-height:1.7;overflow-x:auto}
+/* CSS syntax */
+.sel{color:#C6FF33}       /* selettori */
+.prop{color:#82CFFF}      /* proprietà */
+.val{color:#FFB347}       /* valori */
+.unit{color:#FF9F7F}      /* unità */
+.cm{color:rgba(255,255,255,.28);font-style:italic} /* commenti */
+.at{color:#C0A0FF}        /* at-rules */
+.fn{color:#A8E6CF}        /* funzioni */
+.var{color:#FF8FA3}       /* variabili */
+.punc{color:rgba(255,255,255,.4)}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:2rem 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin:2rem 0}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;margin:2rem 0}
+
+/* CARDS */
+.info-card{background:var(--gray);border:1px solid var(--lime-border);padding:2rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.info-card:hover{border-color:rgba(198,255,51,.5);transform:translateY(-4px)}
+.info-card::before{content:'';position:absolute;left:0;top:0;width:3px;height:0;background:var(--lime);transition:height .5s}
+.info-card:hover::before{height:100%}
+.card-icon{font-size:1.4rem;margin-bottom:1rem}
+.card-title{font-family:'DM Mono',monospace;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:.7rem}
+.card-body{font-size:.9rem;line-height:1.75;color:var(--muted)}
+
+/* TABLE */
+.ref-table{width:100%;border-collapse:collapse;margin:2rem 0}
+.ref-table thead th{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(198,255,51,.6);border-bottom:1px solid var(--lime-border);padding:.8rem 1.2rem;text-align:left}
+.ref-table tbody td{padding:.85rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.05);font-size:.88rem;vertical-align:top}
+.ref-table tbody tr:hover td{background:rgba(198,255,51,.03)}
+.t-name{font-family:'DM Mono',monospace;color:var(--lime);font-size:.82rem}
+.t-desc{color:rgba(255,255,255,.65);line-height:1.6}
+.t-badge{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border:1px solid;white-space:nowrap}
+.t-badge.layout{color:rgba(198,255,51,.7);border-color:rgba(198,255,51,.3)}
+.t-badge.anim{color:rgba(130,207,255,.7);border-color:rgba(130,207,255,.3)}
+.t-badge.text{color:rgba(255,179,71,.7);border-color:rgba(255,179,71,.3)}
+.t-badge.color{color:rgba(200,150,255,.7);border-color:rgba(200,150,255,.3)}
+.t-badge.resp{color:rgba(100,255,180,.7);border-color:rgba(100,255,180,.3)}
+.t-badge.new{color:rgba(255,140,90,.8);border-color:rgba(255,140,90,.35)}
+
+/* CALLOUTS */
+.callout{padding:1.6rem 2rem;margin:2.5rem 0;border-left:3px solid;background:rgba(255,255,255,.03)}
+.callout.tip{border-color:var(--lime)}
+.callout.warning{border-color:#FFB347}
+.callout.info{border-color:#82CFFF}
+.callout.danger{border-color:#FF6B6B}
+.callout-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.5rem}
+.callout.tip .callout-label{color:var(--lime)}
+.callout.warning .callout-label{color:#FFB347}
+.callout.info .callout-label{color:#82CFFF}
+.callout.danger .callout-label{color:#FF6B6B}
+.callout p{font-size:.9rem;line-height:1.75;color:var(--muted)}
+
+/* COMPARE */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:2rem 0}
+.compare-side{padding:2rem;background:var(--gray);border:1px solid var(--lime-border)}
+.compare-side.good{border-top:3px solid var(--lime)}
+.compare-side.bad{border-top:3px solid #FF6B6B}
+.compare-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem}
+.compare-side.good .compare-label{color:var(--lime)}
+.compare-side.bad .compare-label{color:#FF6B6B}
+
+/* CHECKLIST */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin:1.5rem 0}
+.checklist li{display:flex;gap:1rem;align-items:flex-start;font-size:.9rem;color:var(--muted);line-height:1.65;font-family:'DM Mono',monospace}
+.checklist li::before{content:'→';color:var(--lime);flex-shrink:0}
+
+/* LIVE PREVIEWS */
+.preview{background:var(--gray2);border:1px solid var(--lime-border);padding:2.5rem;margin:2rem 0;position:relative;overflow:hidden}
+.preview-label{position:absolute;top:0;left:0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,.9);background:var(--lime);padding:4px 12px}
+.preview-inner{margin-top:1rem}
+
+/* Demo boxes */
+.demo-box-selector .highlight{background:rgba(198,255,51,.15);border:1px solid rgba(198,255,51,.4);padding:4px 8px;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--lime)}
+
+/* Flexbox demo */
+.flex-demo{display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem}
+.flex-item{background:rgba(198,255,51,.12);border:1px solid rgba(198,255,51,.3);padding:12px 18px;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--lime);transition:all .3s}
+.flex-item:hover{background:rgba(198,255,51,.25)}
+
+/* Grid demo */
+.grid-demo{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:.5rem}
+.grid-cell{background:rgba(198,255,51,.08);border:1px solid rgba(198,255,51,.2);padding:18px 8px;text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(198,255,51,.6);transition:background .2s}
+.grid-cell:hover{background:rgba(198,255,51,.18)}
+.grid-cell.span2{grid-column:span 2;background:rgba(198,255,51,.14)}
+.grid-cell.span3{grid-column:span 3;background:rgba(198,255,51,.1)}
+
+/* Color swatches */
+.swatch-row{display:flex;gap:2px;margin:1.5rem 0;flex-wrap:wrap}
+.swatch{width:80px;height:60px;display:flex;align-items:flex-end;padding:4px;font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(0,0,0,.7);transition:transform .2s}
+.swatch:hover{transform:scaleY(1.1);transform-origin:bottom}
+
+/* Specificity diagram */
+.spec-row{display:flex;align-items:center;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.spec-value{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--lime);min-width:60px;letter-spacing:.06em}
+.spec-bar{height:6px;background:var(--lime);border-radius:1px;transition:width .5s}
+.spec-label{font-family:'DM Mono',monospace;font-size:.75rem;color:rgba(255,255,255,.5)}
+
+/* Animation preview */
+.anim-box{width:48px;height:48px;background:var(--lime);margin:1rem auto}
+.anim-spin{animation:spin 2s linear infinite}
+.anim-pulse{animation:pulse 1.5s ease-in-out infinite}
+.anim-bounce{animation:bounce 1s ease infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--lime-border);border-bottom:1px solid var(--lime-border);padding:1rem 0;background:rgba(198,255,51,.02)}
+.marquee-track{display:flex;gap:2.5rem;animation:marquee 22s linear infinite;width:max-content}
+.marquee-item{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.12em;color:rgba(198,255,51,.28);white-space:nowrap;display:flex;align-items:center;gap:1.2rem}
+.m-dot{width:5px;height:5px;background:rgba(198,255,51,.4);border-radius:50%}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:2rem;margin:4rem 0;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(198,255,51,.3)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(198,255,51,.1)}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2.5rem;right:2.5rem;width:48px;height:48px;background:var(--lime);border:none;cursor:pointer;z-index:800;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--black);opacity:0;transition:opacity .3s,transform .2s;transform:translateY(20px);font-family:'DM Mono',monospace}
+#btt.show{opacity:1;transform:translateY(0)}
+#btt:hover{background:var(--white)}
+
+/* FOOTER */
+footer{padding:2.5rem 6vw;border-top:1px solid var(--lime-border);display:flex;align-items:center;justify-content:space-between;background:var(--gray)}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:rgba(198,255,51,.4);letter-spacing:.15em}
+.footer-copy{font-family:'DM Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:.1em;text-transform:uppercase}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.12s}
+.reveal-delay-2{transition-delay:.24s}
+.reveal-delay-3{transition-delay:.36s}
+
+code{font-family:'DM Mono',monospace;font-size:.82rem;color:var(--lime);background:rgba(198,255,51,.08);padding:2px 7px}
+
+@media(max-width:900px){#toc{transform:translateX(-100%)};main{margin-left:0};.grid-2,.grid-3,.compare-row{grid-template-columns:1fr};body{cursor:auto};#cur,#cur-ring{display:none}}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="progress-bar" id="pb"></div>
+
+<nav>
+  <div style="display:flex;align-items:baseline">
+    <a href="#hero" class="nav-logo">VORTEX</a>
+    <span class="nav-sub">/ CSS Guide</span>
+  </div>
+  <div class="nav-right">
+    <a href="#selettori">Selettori</a>
+    <a href="#box">Box Model</a>
+    <a href="#flexbox">Flexbox</a>
+    <a href="#grid">Grid</a>
+    <a href="#animazioni">Animazioni</a>
+    <a href="#responsive">Responsive</a>
+  </div>
+</nav>
+
+<aside id="toc">
+  <div class="toc-section-label">Capitoli</div>
+  <a href="#hero" class="toc-link"><span class="toc-num">00</span>Introduzione</a>
+
+  <div class="toc-section-label">Fondamenta</div>
+  <a href="#selettori" class="toc-link"><span class="toc-num">01</span>Selettori</a>
+  <a href="#specificita" class="toc-link"><span class="toc-num">02</span>Specificità & Cascata</a>
+  <a href="#box" class="toc-link"><span class="toc-num">03</span>Box Model</a>
+  <a href="#tipografia" class="toc-link"><span class="toc-num">04</span>Tipografia</a>
+  <a href="#colori" class="toc-link"><span class="toc-num">05</span>Colori</a>
+
+  <div class="toc-section-label">Layout</div>
+  <a href="#display" class="toc-link"><span class="toc-num">06</span>Display & Positioning</a>
+  <a href="#flexbox" class="toc-link"><span class="toc-num">07</span>Flexbox</a>
+  <a href="#grid" class="toc-link"><span class="toc-num">08</span>CSS Grid</a>
+
+  <div class="toc-section-label">Avanzato</div>
+  <a href="#variabili" class="toc-link"><span class="toc-num">09</span>Variabili CSS</a>
+  <a href="#pseudo" class="toc-link"><span class="toc-num">10</span>Pseudo-classi & elementi</a>
+  <a href="#animazioni" class="toc-link"><span class="toc-num">11</span>Transizioni & Animazioni</a>
+  <a href="#responsive" class="toc-link"><span class="toc-num">12</span>Responsive Design</a>
+  <a href="#funzioni" class="toc-link"><span class="toc-num">13</span>Funzioni CSS</a>
+  <a href="#modern" class="toc-link"><span class="toc-num">14</span>CSS Moderno</a>
+  <a href="#best" class="toc-link"><span class="toc-num">15</span>Best Practice</a>
+
+  <div style="padding:2rem 1.8rem 0;border-top:1px solid rgba(198,255,51,.08);margin-top:1.5rem">
+    <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(198,255,51,.3);margin-bottom:.5rem">Standard</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:rgba(255,255,255,.3)">CSS Level 4 · 2025</div>
+  </div>
+</aside>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">CSS</div>
+  <div class="hero-tag">Guida Completa</div>
+  <h1 class="hero-title">Il Vestito<br>del <span>Web.</span></h1>
+  <p class="hero-subtitle">CSS dalla sintassi base fino alle funzionalità più avanzate di CSS Level 4. Selettori, specificità, Flexbox, Grid, animazioni, custom properties, container queries e tutto il CSS moderno — una guida enciclopedica con demo visive interattive.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="hero-meta-num">15</span><span class="hero-meta-label">Capitoli</span></div>
+    <div class="hero-meta-item"><span class="hero-meta-num">70+</span><span class="hero-meta-label">Esempi di codice</span></div>
+    <div class="hero-meta-item"><span class="hero-meta-num">12</span><span class="hero-meta-label">Demo visive</span></div>
+    <div class="hero-meta-item"><span class="hero-meta-num">1996</span><span class="hero-meta-label">Anno di nascita</span></div>
+  </div>
+  <div class="scroll-line"></div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">SELETTORI<span class="m-dot"></span></div>
+    <div class="marquee-item">FLEXBOX<span class="m-dot"></span></div>
+    <div class="marquee-item">CSS GRID<span class="m-dot"></span></div>
+    <div class="marquee-item">ANIMAZIONI<span class="m-dot"></span></div>
+    <div class="marquee-item">CUSTOM PROPERTIES<span class="m-dot"></span></div>
+    <div class="marquee-item">CONTAINER QUERIES<span class="m-dot"></span></div>
+    <div class="marquee-item">RESPONSIVE DESIGN<span class="m-dot"></span></div>
+    <div class="marquee-item">CSS LEVEL 4<span class="m-dot"></span></div>
+    <div class="marquee-item">SELETTORI<span class="m-dot"></span></div>
+    <div class="marquee-item">FLEXBOX<span class="m-dot"></span></div>
+    <div class="marquee-item">CSS GRID<span class="m-dot"></span></div>
+    <div class="marquee-item">ANIMAZIONI<span class="m-dot"></span></div>
+    <div class="marquee-item">CUSTOM PROPERTIES<span class="m-dot"></span></div>
+    <div class="marquee-item">CONTAINER QUERIES<span class="m-dot"></span></div>
+    <div class="marquee-item">RESPONSIVE DESIGN<span class="m-dot"></span></div>
+    <div class="marquee-item">CSS LEVEL 4<span class="m-dot"></span></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 01 — SELETTORI                    -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="selettori">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 01</div>
+    <h2 class="chapter-title">Selettori<br><span>CSS</span></h2>
+    <p class="chapter-intro">I selettori sono il cuore del CSS — definiscono quali elementi vengono stilizzati. Da quelli semplici per tag e classi fino ai selettori relazionali di CSS Level 4, conoscerli tutti cambia come scrivi stili.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Selettori base</span>
+      <pre><span class="cm">/* Universale */</span>
+<span class="sel">*</span> <span class="punc">{</span> <span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">; }</span>
+
+<span class="cm">/* Tipo */</span>
+<span class="sel">h1</span><span class="punc">,</span> <span class="sel">h2</span><span class="punc">,</span> <span class="sel">h3</span> <span class="punc">{</span> <span class="prop">font-family</span><span class="punc">:</span> <span class="val">sans-serif</span><span class="punc">; }</span>
+
+<span class="cm">/* Classe */</span>
+<span class="sel">.card</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">; }</span>
+<span class="sel">.card.featured</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid gold</span><span class="punc">; }</span>  <span class="cm">/* più classi */</span>
+
+<span class="cm">/* ID */</span>
+<span class="sel">#header</span> <span class="punc">{</span> <span class="prop">position</span><span class="punc">:</span> <span class="val">sticky</span><span class="punc">; </span><span class="prop">top</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">; }</span>
+
+<span class="cm">/* Attributo */</span>
+<span class="sel">a[href]</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">; }</span>
+<span class="sel">a[href^="https"]</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">green</span><span class="punc">; }</span>   <span class="cm">/* inizia con */</span>
+<span class="sel">a[href$=".pdf"]</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">; }</span>     <span class="cm">/* finisce con */</span>
+<span class="sel">a[href*="vortex"]</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">; }</span>  <span class="cm">/* contiene */</span>
+<span class="sel">input[type="email"]</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">solid #ccc</span><span class="punc">; }</span>
+<span class="sel">[data-tema="dark"]</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">#000</span><span class="punc">; }</span></pre>
+    </div>
+
+    <div class="code-block">
+      <span class="code-block-label">Selettori combinatori</span>
+      <pre><span class="cm">/* Discendente (spazio) */</span>
+<span class="sel">nav a</span> <span class="punc">{</span> <span class="prop">text-decoration</span><span class="punc">:</span> <span class="val">none</span><span class="punc">; }</span>
+
+<span class="cm">/* Figlio diretto (>) */</span>
+<span class="sel">ul > li</span> <span class="punc">{</span> <span class="prop">list-style</span><span class="punc">:</span> <span class="val">none</span><span class="punc">; }</span>
+
+<span class="cm">/* Fratello adiacente (+) */</span>
+<span class="sel">h2 + p</span> <span class="punc">{</span> <span class="prop">margin-top</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">; }</span>
+
+<span class="cm">/* Fratelli generici (~) */</span>
+<span class="sel">h2 ~ p</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">gray</span><span class="punc">; }</span>
+
+<span class="cm">/* :is() — raggruppamento semplificato (CSS Level 4) */</span>
+<span class="sel">:is(h1, h2, h3) span</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">; }</span>
+
+<span class="cm">/* :where() — come :is() ma specificità zero */</span>
+<span class="sel">:where(article, section) p</span> <span class="punc">{</span> <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">1.8</span><span class="punc">; }</span>
+
+<span class="cm">/* :not() — esclude elementi */</span>
+<span class="sel">li:not(:last-child)</span> <span class="punc">{</span> <span class="prop">border-bottom</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">solid #eee</span><span class="punc">; }</span>
+<span class="sel">input:not([type="submit"])</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">solid #ccc</span><span class="punc">; }</span>
+
+<span class="cm">/* :has() — selettore genitore (CSS Level 4) */</span>
+<span class="sel">figure:has(figcaption)</span> <span class="punc">{</span> <span class="prop">margin-bottom</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">; }</span>
+<span class="sel">label:has(+ input:required)</span> <span class="punc">{</span> <span class="prop">font-weight</span><span class="punc">:</span> <span class="val">bold</span><span class="punc">; }</span>
+<span class="sel">div:has(> img)</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">; }</span></pre>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-label">💡 :has() è rivoluzionario</div>
+      <p>Il selettore <code>:has()</code> è il primo vero "selettore genitore" nella storia di CSS. Disponibile in tutti i browser moderni dal 2023, permette di stilizzare un elemento in base ai suoi figli o fratelli — una cosa impossibile prima senza JavaScript.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 02 — SPECIFICITÀ                  -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="specificita">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 02</div>
+    <h2 class="chapter-title">Specificità<br><span>& Cascata</span></h2>
+    <p class="chapter-intro">La cascata CSS decide quale regola vince quando più regole si applicano allo stesso elemento. Capire specificità, ordine e inheritance è fondamentale per scrivere CSS predicibile e manutenibile.</p>
+  </div>
+
+  <div class="reveal">
+    <h3 class="sub-title">Come si <span>calcola</span></h3>
+    <p class="prose">La specificità è un punteggio a tre valori: <em>(ID, Classe/Attributo/Pseudo-classe, Tipo/Pseudo-elemento)</em>. Vince il selettore con il punteggio più alto. In caso di parità, vince l'ultimo dichiarato.</p>
+
+    <div style="margin:2rem 0">
+      <div class="spec-row">
+        <span class="spec-value">0,0,1</span>
+        <div class="spec-bar" style="width:4%"></div>
+        <code class="spec-label">p { }</code>
+        <span class="spec-label" style="margin-left:auto">Tipo</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">0,1,0</span>
+        <div class="spec-bar" style="width:12%"></div>
+        <code class="spec-label">.card { }</code>
+        <span class="spec-label" style="margin-left:auto">Classe</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">0,1,1</span>
+        <div class="spec-bar" style="width:18%"></div>
+        <code class="spec-label">div.card { }</code>
+        <span class="spec-label" style="margin-left:auto">Tipo + Classe</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">0,2,1</span>
+        <div class="spec-bar" style="width:26%"></div>
+        <code class="spec-label">.nav .card { }</code>
+        <span class="spec-label" style="margin-left:auto">Due classi</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">1,0,0</span>
+        <div class="spec-bar" style="width:55%"></div>
+        <code class="spec-label">#header { }</code>
+        <span class="spec-label" style="margin-left:auto">ID</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">1,1,0</span>
+        <div class="spec-bar" style="width:68%"></div>
+        <code class="spec-label">#header .logo { }</code>
+        <span class="spec-label" style="margin-left:auto">ID + Classe</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-value">∞</span>
+        <div class="spec-bar" style="width:100%;background:#FF6B6B"></div>
+        <code class="spec-label" style="color:#FF6B6B">color: red !important</code>
+        <span class="spec-label" style="margin-left:auto">!important — evitalo</span>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-side good">
+        <div class="compare-label">✓ Specificità gestita bene</div>
+        <pre style="font-family:'DM Mono',monospace;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7"><span class="cm">/* Solo classi, facile da sovrascrivere */</span>
+<span class="sel">.btn</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">8px 16px</span><span class="punc">; }</span>
+<span class="sel">.btn-primary</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">; }</span>
+<span class="sel">.btn-lg</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">12px 24px</span><span class="punc">; }</span>
+
+<span class="cm">/* layer per controllo esplicito */</span>
+<span class="at">@layer</span> base<span class="punc">,</span> components<span class="punc">,</span> utilities<span class="punc">;</span></pre>
+      </div>
+      <div class="compare-side bad">
+        <div class="compare-label">✗ Specificità fuori controllo</div>
+        <pre style="font-family:'DM Mono',monospace;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7"><span class="cm">/* ID + classe = duro da battere */</span>
+<span class="sel">#app div.card span</span> <span class="punc">{</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="cm">/* e ora userai !important... */</span>
+<span class="sel">.highlight</span> <span class="punc">{</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">blue <span style="color:#FF6B6B">!important</span></span><span class="punc">;</span>
+<span class="punc">}</span></pre>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-label">ℹ️ @layer — controllo esplicito della cascata</div>
+      <p>Con <code>@layer</code> puoi dichiarare esplicitamente l'ordine di priorità dei tuoi stili. Le regole nei layer successivi vincono su quelli precedenti, indipendentemente dalla specificità. Introdotto nel 2022, supportato da tutti i browser moderni.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 03 — BOX MODEL                    -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="box">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 03</div>
+    <h2 class="chapter-title">Box<br><span>Model</span></h2>
+    <p class="chapter-intro">Ogni elemento HTML è una scatola rettangolare composta da content, padding, border e margin. Capire il box model — e la differenza tra content-box e border-box — è il prerequisito di ogni layout.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Box Model</span>
+      <pre><span class="cm">/* border-box: width e height includono padding e border */</span>
+<span class="sel">*</span><span class="punc">,</span> <span class="sel">*::before</span><span class="punc">,</span> <span class="sel">*::after</span> <span class="punc">{</span>
+  <span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">;</span>  <span class="cm">/* usa sempre questo */</span>
+<span class="punc">}</span>
+
+<span class="sel">.box</span> <span class="punc">{</span>
+  <span class="cm">/* Dimensioni */</span>
+  <span class="prop">width</span><span class="punc">:</span> <span class="unit">300px</span><span class="punc">;</span>
+  <span class="prop">height</span><span class="punc">:</span> <span class="unit">200px</span><span class="punc">;</span>
+  <span class="prop">min-width</span><span class="punc">:</span> <span class="unit">100px</span><span class="punc">;</span>
+  <span class="prop">max-width</span><span class="punc">:</span> <span class="unit">100%</span><span class="punc">;</span>
+  <span class="prop">min-height</span><span class="punc">:</span> <span class="unit">80px</span><span class="punc">;</span>
+
+  <span class="cm">/* Padding — interno */</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>                      <span class="cm">/* tutti i lati */</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="unit">1rem 2rem</span><span class="punc">;</span>               <span class="cm">/* top/bottom left/right */</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="unit">10px 20px 30px 40px</span><span class="punc">;</span>    <span class="cm">/* top right bottom left */</span>
+  <span class="prop">padding-inline</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>             <span class="cm">/* logico: sinistra + destra */</span>
+  <span class="prop">padding-block</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>              <span class="cm">/* logico: sopra + sotto */</span>
+
+  <span class="cm">/* Margin — esterno */</span>
+  <span class="prop">margin</span><span class="punc">:</span> <span class="unit">0 auto</span><span class="punc">;</span>                   <span class="cm">/* centra orizzontalmente */</span>
+  <span class="prop">margin-block-start</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>        <span class="cm">/* proprietà logica */</span>
+
+  <span class="cm">/* Border */</span>
+  <span class="prop">border</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid</span> <span class="val">#C6FF33</span><span class="punc">;</span>
+  <span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">8px</span><span class="punc">;</span>
+  <span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">50%</span><span class="punc">;</span>              <span class="cm">/* cerchio perfetto */</span>
+  <span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">16px 4px 16px 4px</span><span class="punc">;</span>
+
+  <span class="cm">/* Overflow */</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>
+  <span class="prop">overflow-x</span><span class="punc">:</span> <span class="val">auto</span><span class="punc">;</span>
+  <span class="prop">overflow-y</span><span class="punc">:</span> <span class="val">scroll</span><span class="punc">;</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">clip</span><span class="punc">;</span>                   <span class="cm">/* non crea scroll context */</span>
+<span class="punc">}</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 04 — TIPOGRAFIA                   -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="tipografia">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 04</div>
+    <h2 class="chapter-title">Tipo<br><span>grafia</span></h2>
+    <p class="chapter-intro">La tipografia è il 95% del web design. Font variabili, fluid type con clamp(), proprietà di spaziatura avanzate, text-wrap: balance — il CSS moderno ha trasformato il controllo tipografico.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Tipografia completa</span>
+      <pre><span class="cm">/* Font loading ottimizzato */</span>
+<span class="at">@font-face</span> <span class="punc">{</span>
+  <span class="prop">font-family</span><span class="punc">:</span> <span class="val">'MioFont'</span><span class="punc">;</span>
+  <span class="prop">src</span><span class="punc">:</span> <span class="fn">url</span><span class="punc">(</span><span class="val">'font.woff2'</span><span class="punc">)</span> <span class="fn">format</span><span class="punc">(</span><span class="val">'woff2'</span><span class="punc">);</span>
+  <span class="prop">font-display</span><span class="punc">:</span> <span class="val">swap</span><span class="punc">;</span>
+  <span class="prop">font-weight</span><span class="punc">:</span> <span class="val">100 900</span><span class="punc">;</span>  <span class="cm">/* font variabile */</span>
+<span class="punc">}</span>
+
+<span class="sel">body</span> <span class="punc">{</span>
+  <span class="prop">font-family</span><span class="punc">:</span> <span class="val">'Syne'</span><span class="punc">,</span> <span class="val">system-ui</span><span class="punc">,</span> <span class="val">sans-serif</span><span class="punc">;</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="val">clamp</span><span class="punc">(</span><span class="unit">1rem</span><span class="punc">,</span> <span class="unit">2.5vw</span><span class="punc">,</span> <span class="unit">1.25rem</span><span class="punc">);</span> <span class="cm">/* fluid */</span>
+  <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">1.7</span><span class="punc">;</span>
+  <span class="prop">font-weight</span><span class="punc">:</span> <span class="unit">400</span><span class="punc">;</span>
+  <span class="prop">letter-spacing</span><span class="punc">:</span> <span class="unit">0.01em</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="sel">h1</span> <span class="punc">{</span>
+  <span class="cm">/* Fluid typography con clamp() */</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="fn">clamp</span><span class="punc">(</span><span class="unit">2.5rem</span><span class="punc">,</span> <span class="unit">8vw</span><span class="punc">,</span> <span class="unit">6rem</span><span class="punc">);</span>
+  <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">1.05</span><span class="punc">;</span>
+  <span class="prop">letter-spacing</span><span class="punc">:</span> <span class="unit">-0.03em</span><span class="punc">;</span>
+  <span class="prop">text-wrap</span><span class="punc">:</span> <span class="val">balance</span><span class="punc">;</span>   <span class="cm">/* equilibra righe */</span>
+<span class="punc">}</span>
+
+<span class="sel">p</span> <span class="punc">{</span>
+  <span class="prop">text-wrap</span><span class="punc">:</span> <span class="val">pretty</span><span class="punc">;</span>    <span class="cm">/* evita righe orfane */</span>
+  <span class="prop">max-width</span><span class="punc">:</span> <span class="unit">65ch</span><span class="punc">;</span>       <span class="cm">/* ~65 caratteri = leggibilità ottimale */</span>
+  <span class="prop">hanging-punctuation</span><span class="punc">:</span> <span class="val">first last</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Truncation */</span>
+<span class="sel">.truncate</span> <span class="punc">{</span>
+  <span class="prop">white-space</span><span class="punc">:</span> <span class="val">nowrap</span><span class="punc">;</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>
+  <span class="prop">text-overflow</span><span class="punc">:</span> <span class="val">ellipsis</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="sel">.line-clamp-3</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">-webkit-box</span><span class="punc">;</span>
+  <span class="prop">-webkit-line-clamp</span><span class="punc">:</span> <span class="unit">3</span><span class="punc">;</span>
+  <span class="prop">-webkit-box-orient</span><span class="punc">:</span> <span class="val">vertical</span><span class="punc">;</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Font variabili — axes */</span>
+<span class="sel">.variable-font</span> <span class="punc">{</span>
+  <span class="prop">font-variation-settings</span><span class="punc">:</span>
+    <span class="val">'wght'</span> <span class="unit">750</span><span class="punc">,</span>   <span class="cm">/* weight */</span>
+    <span class="val">'wdth'</span> <span class="unit">85</span><span class="punc">,</span>    <span class="cm">/* width */</span>
+    <span class="val">'ital'</span> <span class="unit">0.5</span><span class="punc">;</span>   <span class="cm">/* italic */</span>
+<span class="punc">}</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 05 — COLORI                       -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="colori">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 05</div>
+    <h2 class="chapter-title">Colori &<br><span>Gradienti</span></h2>
+    <p class="chapter-intro">CSS Level 4 ha rivoluzionato il colore: oklch, color-mix(), color-contrast(), spazi colore wide-gamut, e gradienti con interpolazione nei nuovi spazi. Una tavolozza infinitamente più ricca.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Sintassi colori — tutte le forme</span>
+      <pre><span class="cm">/* Classici */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="val">#C6FF33</span><span class="punc">;</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">rgb</span><span class="punc">(</span><span class="unit">198</span><span class="punc">,</span> <span class="unit">255</span><span class="punc">,</span> <span class="unit">51</span><span class="punc">);</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">hsl</span><span class="punc">(</span><span class="unit">77deg</span> <span class="unit">100%</span> <span class="unit">60%</span><span class="punc">);</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">rgb</span><span class="punc">(</span><span class="unit">198 255 51</span> <span class="punc">/</span> <span class="unit">0.8</span><span class="punc">);</span>   <span class="cm">/* con alpha */</span>
+
+<span class="cm">/* CSS Level 4 — spazi colore moderni */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">oklch</span><span class="punc">(</span><span class="unit">90%</span> <span class="unit">0.23</span> <span class="unit">130</span><span class="punc">);</span>     <span class="cm">/* percezione uniforme */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">oklch</span><span class="punc">(</span><span class="unit">60%</span> <span class="unit">0.18</span> <span class="unit">270</span> <span class="punc">/</span> <span class="unit">0.5</span><span class="punc">);</span> <span class="cm">/* con alpha */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">display-p3</span><span class="punc">(</span><span class="unit">0.78 1.0 0.2</span><span class="punc">);</span> <span class="cm">/* wide gamut */</span>
+
+<span class="cm">/* color-mix() — mescola colori */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="fn">color-mix</span><span class="punc">(</span><span class="val">in oklch</span><span class="punc">,</span> <span class="val">lime</span> <span class="unit">40%</span><span class="punc">,</span> <span class="val">white</span><span class="punc">);</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="fn">color-mix</span><span class="punc">(</span><span class="val">in hsl</span><span class="punc">,</span> <span class="val">#C6FF33</span><span class="punc">,</span> <span class="val">transparent</span> <span class="unit">30%</span><span class="punc">);</span>
+
+<span class="cm">/* Gradienti */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="fn">linear-gradient</span><span class="punc">(</span><span class="unit">135deg</span><span class="punc">,</span> <span class="val">#000</span><span class="punc">,</span> <span class="val">#C6FF33</span><span class="punc">);</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="fn">radial-gradient</span><span class="punc">(</span><span class="val">ellipse at 30% 50%</span><span class="punc">,</span> <span class="val">#C6FF33</span><span class="punc">,</span> <span class="val">transparent</span><span class="punc">);</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="fn">conic-gradient</span><span class="punc">(</span><span class="val">from 45deg</span><span class="punc">,</span> <span class="val">red</span><span class="punc">,</span> <span class="val">blue</span><span class="punc">,</span> <span class="val">red</span><span class="punc">);</span>
+
+<span class="cm">/* Gradiente con oklch — interpolazione smooth */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="fn">linear-gradient</span><span class="punc">(</span><span class="val">in oklch</span><span class="punc">,</span> <span class="val">blue</span><span class="punc">,</span> <span class="val">red</span><span class="punc">);</span>
+
+<span class="cm">/* Layered backgrounds */</span>
+<span class="prop">background</span><span class="punc">:</span>
+  <span class="fn">radial-gradient</span><span class="punc">(</span><span class="val">circle at 80% 20%</span><span class="punc">,</span> <span class="fn">oklch</span><span class="punc">(</span><span class="unit">85% 0.2 130</span> <span class="punc">/</span> <span class="unit">.15</span><span class="punc">),</span> <span class="val">transparent</span> <span class="unit">50%</span><span class="punc">),</span>
+  <span class="fn">radial-gradient</span><span class="punc">(</span><span class="val">circle at 20% 80%</span><span class="punc">,</span> <span class="fn">oklch</span><span class="punc">(</span><span class="unit">70% 0.15 270</span> <span class="punc">/</span> <span class="unit">.1</span><span class="punc">),</span> <span class="val">transparent</span> <span class="unit">50%</span><span class="punc">),</span>
+  <span class="val">#000</span><span class="punc">;</span></pre>
+    </div>
+
+    <div class="preview">
+      <div class="preview-label">Demo — Swatches colore</div>
+      <div class="swatch-row preview-inner">
+        <div class="swatch" style="background:#000000;border:1px solid rgba(255,255,255,.1)"><span style="color:rgba(255,255,255,.5)">#000</span></div>
+        <div class="swatch" style="background:#0d0d0d"><span style="color:rgba(255,255,255,.4)">#0d0d</span></div>
+        <div class="swatch" style="background:#1a1a1a"><span style="color:rgba(255,255,255,.4)">#1a1a</span></div>
+        <div class="swatch" style="background:#333333"><span style="color:rgba(255,255,255,.5)">#333</span></div>
+        <div class="swatch" style="background:#666666"><span style="color:#fff">#666</span></div>
+        <div class="swatch" style="background:#999999"><span>#999</span></div>
+        <div class="swatch" style="background:#cccccc"><span>#ccc</span></div>
+        <div class="swatch" style="background:#ffffff"><span>#fff</span></div>
+        <div class="swatch" style="background:#C6FF33"><span>#C6FF33</span></div>
+        <div class="swatch" style="background:oklch(90% 0.23 130)"><span>oklch</span></div>
+        <div class="swatch" style="background:linear-gradient(135deg,#000,#C6FF33)"><span style="color:#C6FF33">grad</span></div>
+        <div class="swatch" style="background:conic-gradient(#C6FF33,#000,#C6FF33)"><span style="color:#C6FF33">conic</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 06 — DISPLAY & POSITIONING        -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="display">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 06</div>
+    <h2 class="chapter-title">Display &<br><span>Positioning</span></h2>
+    <p class="chapter-intro">La proprietà display controlla come un elemento partecipa al flusso del documento. Position determina come viene posizionato rispetto al suo contesto. Insieme definiscono il comportamento fondamentale di ogni elemento.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Display & Position</span>
+      <pre><span class="cm">/* Valori di display essenziali */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">block</span><span class="punc">;</span>         <span class="cm">/* occupa tutta la larghezza */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">inline</span><span class="punc">;</span>        <span class="cm">/* scorre nel testo, no width/height */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">inline-block</span><span class="punc">;</span>  <span class="cm">/* inline ma accetta dimensioni */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">none</span><span class="punc">;</span>          <span class="cm">/* rimuove dal flusso e dalla a11y */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">contents</span><span class="punc">;</span>      <span class="cm">/* rimuove il box, mantiene i figli */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">flex</span><span class="punc">;</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">table</span><span class="punc">;</span>
+
+<span class="cm">/* Visibility vs display */</span>
+<span class="prop">visibility</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>   <span class="cm">/* nascosto ma occupa spazio */</span>
+<span class="prop">opacity</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>           <span class="cm">/* trasparente ma interagibile */</span>
+<span class="prop">display</span><span class="punc">:</span> <span class="val">none</span><span class="punc">;</span>        <span class="cm">/* rimosso completamente */</span>
+
+<span class="cm">/* Position */</span>
+<span class="sel">.relativo</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">relative</span><span class="punc">;</span>  <span class="cm">/* offset da posizione normale */</span>
+  <span class="prop">top</span><span class="punc">:</span> <span class="unit">10px</span><span class="punc">;</span> <span class="prop">left</span><span class="punc">:</span> <span class="unit">20px</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="sel">.assoluto</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">absolute</span><span class="punc">;</span>  <span class="cm">/* rispetto al genitore positioned */</span>
+  <span class="prop">top</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="prop">right</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>
+  <span class="cm">/* centra nell'ancestor */</span>
+  <span class="prop">inset</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="prop">margin</span><span class="punc">:</span> <span class="val">auto</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="sel">.fisso</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">fixed</span><span class="punc">;</span>    <span class="cm">/* rispetto al viewport */</span>
+  <span class="prop">bottom</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span> <span class="prop">right</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>
+  <span class="prop">z-index</span><span class="punc">:</span> <span class="unit">1000</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="sel">.sticky</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">sticky</span><span class="punc">;</span>  <span class="cm">/* rimane nel flusso + si ancora */</span>
+  <span class="prop">top</span><span class="punc">:</span> <span class="unit">64px</span><span class="punc">;</span>         <span class="cm">/* OBBLIGATORIO per sticky */</span>
+<span class="punc">}</span>
+
+<span class="cm">/* inset — shorthand per top/right/bottom/left */</span>
+<span class="prop">inset</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>                    <span class="cm">/* tutti e 4 = 0 */</span>
+<span class="prop">inset</span><span class="punc">:</span> <span class="unit">10px 20px</span><span class="punc">;</span>           <span class="cm">/* top/bottom + left/right */</span>
+<span class="prop">inset-inline</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>             <span class="cm">/* logico: left + right */</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 07 — FLEXBOX                      -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="flexbox">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 07</div>
+    <h2 class="chapter-title">Flex<br><span>box</span></h2>
+    <p class="chapter-intro">Flexbox è il sistema di layout monodimensionale per eccellenza — distribuisce spazio lungo un asse (riga o colonna) con un controllo finissimo su allineamento, ordine e flessibilità degli elementi.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Flexbox — riferimento completo</span>
+      <pre><span class="cm">/* Container */</span>
+<span class="sel">.container</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">flex</span><span class="punc">;</span>
+
+  <span class="cm">/* Direzione */</span>
+  <span class="prop">flex-direction</span><span class="punc">:</span> <span class="val">row</span><span class="punc">;</span>             <span class="cm">/* default: sinistra → destra */</span>
+  <span class="prop">flex-direction</span><span class="punc">:</span> <span class="val">row-reverse</span><span class="punc">;</span>
+  <span class="prop">flex-direction</span><span class="punc">:</span> <span class="val">column</span><span class="punc">;</span>
+  <span class="prop">flex-direction</span><span class="punc">:</span> <span class="val">column-reverse</span><span class="punc">;</span>
+
+  <span class="cm">/* A capo */</span>
+  <span class="prop">flex-wrap</span><span class="punc">:</span> <span class="val">nowrap</span><span class="punc">;</span>              <span class="cm">/* default */</span>
+  <span class="prop">flex-wrap</span><span class="punc">:</span> <span class="val">wrap</span><span class="punc">;</span>
+  <span class="prop">flex-flow</span><span class="punc">:</span> <span class="val">row wrap</span><span class="punc">;</span>           <span class="cm">/* shorthand */</span>
+
+  <span class="cm">/* Spaziatura */</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">2rem 1rem</span><span class="punc">;</span>               <span class="cm">/* row-gap + column-gap */</span>
+
+  <span class="cm">/* Allineamento asse principale (justify) */</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">flex-start</span><span class="punc">;</span>   <span class="cm">/* default */</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">flex-end</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">space-between</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">space-around</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">space-evenly</span><span class="punc">;</span>
+
+  <span class="cm">/* Allineamento asse trasversale (align) */</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">stretch</span><span class="punc">;</span>          <span class="cm">/* default */</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">flex-start</span><span class="punc">;</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">flex-end</span><span class="punc">;</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">baseline</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Items */</span>
+<span class="sel">.item</span> <span class="punc">{</span>
+  <span class="prop">flex</span><span class="punc">:</span> <span class="unit">1</span><span class="punc">;</span>                       <span class="cm">/* flex-grow: 1, occupa spazio disponibile */</span>
+  <span class="prop">flex</span><span class="punc">:</span> <span class="unit">0 0 200px</span><span class="punc">;</span>              <span class="cm">/* grow shrink basis */</span>
+  <span class="prop">flex</span><span class="punc">:</span> <span class="val">none</span><span class="punc">;</span>                    <span class="cm">/* 0 0 auto — dimensione fissa */</span>
+  <span class="prop">align-self</span><span class="punc">:</span> <span class="val">flex-end</span><span class="punc">;</span>         <span class="cm">/* override align-items */</span>
+  <span class="prop">order</span><span class="punc">:</span> <span class="unit">-1</span><span class="punc">;</span>                     <span class="cm">/* cambia ordine visivo */</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Centrare qualsiasi cosa */</span>
+<span class="sel">.centra</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">flex</span><span class="punc">;</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>
+<span class="punc">}</span></pre>
+    </div>
+
+    <div class="preview">
+      <div class="preview-label">Demo — Flex items</div>
+      <div class="flex-demo">
+        <div class="flex-item">Item 1</div>
+        <div class="flex-item" style="flex:2">Item 2 (flex:2)</div>
+        <div class="flex-item">Item 3</div>
+        <div class="flex-item">Item 4</div>
+        <div class="flex-item" style="align-self:flex-end">↓ align-self</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 08 — CSS GRID                     -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="grid">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 08</div>
+    <h2 class="chapter-title">CSS<br><span>Grid</span></h2>
+    <p class="chapter-intro">CSS Grid è il primo sistema di layout bidimensionale nativo del web. Righe e colonne, template, named areas, auto-placement, subgrid — è il futuro (e il presente) del layout CSS.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">CSS Grid — completo</span>
+      <pre><span class="sel">.grid</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+
+  <span class="cm">/* Definire colonne */</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="unit">200px</span> <span class="unit">1fr</span> <span class="unit">1fr</span><span class="punc">;</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="fn">repeat</span><span class="punc">(</span><span class="unit">3</span><span class="punc">,</span> <span class="unit">1fr</span><span class="punc">);</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="fn">repeat</span><span class="punc">(</span><span class="val">auto-fill</span><span class="punc">,</span> <span class="fn">minmax</span><span class="punc">(</span><span class="unit">250px</span><span class="punc">,</span> <span class="unit">1fr</span><span class="punc">));</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="val">subgrid</span><span class="punc">;</span>    <span class="cm">/* eredita la griglia genitore */</span>
+
+  <span class="cm">/* Righe */</span>
+  <span class="prop">grid-template-rows</span><span class="punc">:</span> <span class="val">auto</span> <span class="unit">1fr</span> <span class="val">auto</span><span class="punc">;</span>
+  <span class="prop">grid-auto-rows</span><span class="punc">:</span> <span class="fn">minmax</span><span class="punc">(</span><span class="unit">100px</span><span class="punc">,</span> <span class="val">auto</span><span class="punc">);</span>
+
+  <span class="cm">/* Gap */</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>
+  <span class="prop">column-gap</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>
+
+  <span class="cm">/* Named areas */</span>
+  <span class="prop">grid-template-areas</span><span class="punc">:</span>
+    <span class="val">"header header header"</span>
+    <span class="val">"sidebar main    main"</span>
+    <span class="val">"footer footer  footer"</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Posizionamento items */</span>
+<span class="sel">.header</span>  <span class="punc">{</span> <span class="prop">grid-area</span><span class="punc">:</span> <span class="val">header</span><span class="punc">; }</span>
+<span class="sel">.sidebar</span> <span class="punc">{</span> <span class="prop">grid-area</span><span class="punc">:</span> <span class="val">sidebar</span><span class="punc">; }</span>
+<span class="sel">.main</span>    <span class="punc">{</span> <span class="prop">grid-area</span><span class="punc">:</span> <span class="val">main</span><span class="punc">; }</span>
+
+<span class="cm">/* Span e linee */</span>
+<span class="sel">.hero</span> <span class="punc">{</span>
+  <span class="prop">grid-column</span><span class="punc">:</span> <span class="unit">1</span> <span class="punc">/</span> <span class="unit">-1</span><span class="punc">;</span>       <span class="cm">/* dall'inizio alla fine */</span>
+  <span class="prop">grid-column</span><span class="punc">:</span> <span class="val">span</span> <span class="unit">2</span><span class="punc">;</span>        <span class="cm">/* occupa 2 colonne */</span>
+  <span class="prop">grid-row</span><span class="punc">:</span> <span class="unit">1</span> <span class="punc">/</span> <span class="unit">3</span><span class="punc">;</span>            <span class="cm">/* dalla riga 1 alla 3 */</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Allineamento */</span>
+<span class="sel">.grid</span> <span class="punc">{</span>
+  <span class="prop">justify-items</span><span class="punc">:</span> <span class="val">start</span><span class="punc">;</span>    <span class="cm">/* items nelle celle, asse X */</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>    <span class="cm">/* items nelle celle, asse Y */</span>
+  <span class="prop">place-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>    <span class="cm">/* shorthand per entrambi */</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">space-between</span><span class="punc">;</span> <span class="cm">/* griglia nel container */</span>
+<span class="punc">}</span></pre>
+    </div>
+
+    <div class="preview">
+      <div class="preview-label">Demo — CSS Grid</div>
+      <div class="grid-demo preview-inner">
+        <div class="grid-cell span3">Header (span 3)</div>
+        <div class="grid-cell"></div>
+        <div class="grid-cell" style="background:rgba(198,255,51,.18)">★</div>
+        <div class="grid-cell">Col</div>
+        <div class="grid-cell">Col</div>
+        <div class="grid-cell span2">Sidebar (span 2)</div>
+        <div class="grid-cell">Main</div>
+        <div class="grid-cell">Main</div>
+        <div class="grid-cell span3" style="background:rgba(198,255,51,.06)">Footer (span 3)</div>
+        <div class="grid-cell"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 09 — VARIABILI CSS                -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="variabili">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 09</div>
+    <h2 class="chapter-title">Custom<br><span>Properties</span></h2>
+    <p class="chapter-intro">Le variabili CSS (custom properties) sono vere variabili native del browser — ereditabili, modificabili a runtime con JavaScript, scopate localmente. Sono la base di ogni sistema di design moderno.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Custom Properties — pattern avanzati</span>
+      <pre><span class="cm">/* Definizione nel root */</span>
+<span class="sel">:root</span> <span class="punc">{</span>
+  <span class="cm">/* Design tokens */</span>
+  <span class="var">--color-accent</span><span class="punc">:</span> <span class="val">#C6FF33</span><span class="punc">;</span>
+  <span class="var">--color-bg</span><span class="punc">:</span> <span class="val">#000</span><span class="punc">;</span>
+  <span class="var">--color-text</span><span class="punc">:</span> <span class="val">#fff</span><span class="punc">;</span>
+
+  <span class="cm">/* Spacing scale */</span>
+  <span class="var">--space-1</span><span class="punc">:</span> <span class="unit">0.25rem</span><span class="punc">;</span>
+  <span class="var">--space-4</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>
+  <span class="var">--space-8</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>
+  <span class="var">--space-16</span><span class="punc">:</span> <span class="unit">4rem</span><span class="punc">;</span>
+
+  <span class="cm">/* Typography scale */</span>
+  <span class="var">--text-sm</span><span class="punc">:</span> <span class="fn">clamp</span><span class="punc">(</span><span class="unit">0.8rem</span><span class="punc">,</span> <span class="unit">1.5vw</span><span class="punc">,</span> <span class="unit">0.9rem</span><span class="punc">);</span>
+  <span class="var">--text-base</span><span class="punc">:</span> <span class="fn">clamp</span><span class="punc">(</span><span class="unit">1rem</span><span class="punc">,</span> <span class="unit">2vw</span><span class="punc">,</span> <span class="unit">1.1rem</span><span class="punc">);</span>
+  <span class="var">--text-xl</span><span class="punc">:</span> <span class="fn">clamp</span><span class="punc">(</span><span class="unit">1.5rem</span><span class="punc">,</span> <span class="unit">4vw</span><span class="punc">,</span> <span class="unit">2rem</span><span class="punc">);</span>
+
+  <span class="cm">/* Easing */</span>
+  <span class="var">--ease-out</span><span class="punc">:</span> <span class="fn">cubic-bezier</span><span class="punc">(</span><span class="unit">0.22</span><span class="punc">,</span> <span class="unit">1</span><span class="punc">,</span> <span class="unit">0.36</span><span class="punc">,</span> <span class="unit">1</span><span class="punc">);</span>
+  <span class="var">--ease-spring</span><span class="punc">:</span> <span class="fn">cubic-bezier</span><span class="punc">(</span><span class="unit">0.34</span><span class="punc">,</span> <span class="unit">1.56</span><span class="punc">,</span> <span class="unit">0.64</span><span class="punc">,</span> <span class="unit">1</span><span class="punc">);</span>
+
+  <span class="cm">/* Shadow */</span>
+  <span class="var">--shadow-sm</span><span class="punc">:</span> <span class="unit">0 1px 3px</span> <span class="fn">rgb</span><span class="punc">(</span><span class="unit">0 0 0 / .15</span><span class="punc">);</span>
+  <span class="var">--shadow-lg</span><span class="punc">:</span> <span class="unit">0 20px 40px</span> <span class="fn">rgb</span><span class="punc">(</span><span class="unit">0 0 0 / .4</span><span class="punc">);</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Uso */</span>
+<span class="sel">.card</span> <span class="punc">{</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--color-bg</span><span class="punc">);</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--color-text</span><span class="punc">);</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--space-8</span><span class="punc">);</span>
+  <span class="prop">box-shadow</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--shadow-lg</span><span class="punc">);</span>
+  <span class="cm">/* fallback */</span>
+  <span class="prop">border</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">solid</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--border-color</span><span class="punc">,</span> <span class="val">rgba(255,255,255,.2)</span><span class="punc">);</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Scope locale */</span>
+<span class="sel">.btn</span> <span class="punc">{</span>
+  <span class="var">--btn-bg</span><span class="punc">:</span> <span class="val">transparent</span><span class="punc">;</span>
+  <span class="var">--btn-color</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--color-accent</span><span class="punc">);</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--btn-bg</span><span class="punc">);</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--btn-color</span><span class="punc">);</span>
+<span class="punc">}</span>
+<span class="sel">.btn-filled</span> <span class="punc">{</span>
+  <span class="var">--btn-bg</span><span class="punc">:</span> <span class="fn">var</span><span class="punc">(</span><span class="var">--color-accent</span><span class="punc">);</span>
+  <span class="var">--btn-color</span><span class="punc">:</span> <span class="val">#000</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Modifica da JavaScript */</span>
+<span class="cm">// document.documentElement.style.setProperty('--color-accent', '#ff0');</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 10 — PSEUDO                       -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="pseudo">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 10</div>
+    <h2 class="chapter-title">Pseudo-classi<br><span>& Elementi</span></h2>
+    <p class="chapter-intro">Le pseudo-classi selezionano elementi in base al loro stato o posizione. Gli pseudo-elementi creano parti virtuali di un elemento che puoi stilizzare. Insieme coprono il 90% degli effetti interattivi.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="grid-2">
+      <div>
+        <h4 class="sub-sub">Pseudo-classi di stato</h4>
+        <div class="code-block">
+          <pre><span class="sel">a:link</span>    <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">; }</span>
+<span class="sel">a:visited</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">purple</span><span class="punc">; }</span>
+<span class="sel">a:hover</span>   <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">; }</span>
+<span class="sel">a:active</span>  <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">; }</span>
+<span class="sel">a:focus</span>   <span class="punc">{</span> <span class="prop">outline</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid lime</span><span class="punc">; }</span>
+<span class="sel">a:focus-visible</span> <span class="punc">{</span> <span class="prop">outline</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid lime</span><span class="punc">; }</span>
+
+<span class="sel">input:disabled</span>    <span class="punc">{</span> <span class="prop">opacity</span><span class="punc">:</span> <span class="unit">.5</span><span class="punc">; }</span>
+<span class="sel">input:checked</span>     <span class="punc">{</span> <span class="prop">accent-color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">; }</span>
+<span class="sel">input:required</span>    <span class="punc">{</span> <span class="prop">border-color</span><span class="punc">:</span> <span class="val">orange</span><span class="punc">; }</span>
+<span class="sel">input:valid</span>       <span class="punc">{</span> <span class="prop">border-color</span><span class="punc">:</span> <span class="val">green</span><span class="punc">; }</span>
+<span class="sel">input:invalid</span>     <span class="punc">{</span> <span class="prop">border-color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">; }</span>
+<span class="sel">input:placeholder-shown</span> <span class="punc">{</span>
+  <span class="prop">border-color</span><span class="punc">:</span> <span class="val">gray</span><span class="punc">;</span>
+<span class="punc">}</span></pre>
+        </div>
+      </div>
+      <div>
+        <h4 class="sub-sub">Pseudo-classi strutturali</h4>
+        <div class="code-block">
+          <pre><span class="sel">li:first-child</span>    <span class="punc">{}</span>
+<span class="sel">li:last-child</span>     <span class="punc">{}</span>
+<span class="sel">li:nth-child(2)</span>   <span class="punc">{}</span>  <span class="cm">/* 2° figlio */</span>
+<span class="sel">li:nth-child(odd)</span> <span class="punc">{}</span>  <span class="cm">/* dispari */</span>
+<span class="sel">li:nth-child(3n)</span>  <span class="punc">{}</span>  <span class="cm">/* ogni 3 */</span>
+<span class="sel">li:nth-child(n+4)</span> <span class="punc">{}</span>  <span class="cm">/* dal 4° in poi */</span>
+<span class="sel">li:nth-last-child(2)</span> <span class="punc">{}</span>
+
+<span class="cm">/* Nuovo in CSS Level 4 */</span>
+<span class="sel">li:nth-child(2 of .active)</span> <span class="punc">{}</span>
+
+<span class="sel">p:first-of-type</span> <span class="punc">{}</span>
+<span class="sel">p:last-of-type</span>  <span class="punc">{}</span>
+<span class="sel">p:only-child</span>    <span class="punc">{}</span>
+<span class="sel">p:empty</span>         <span class="punc">{}</span>
+<span class="sel">:root</span>           <span class="punc">{}</span>  <span class="cm">/* elemento html */</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="sub-sub">Pseudo-elementi</h4>
+    <div class="code-block">
+      <span class="code-block-label">Pseudo-elementi</span>
+      <pre><span class="cm">/* ::before e ::after — contenuto generato */</span>
+<span class="sel">.card::before</span> <span class="punc">{</span>
+  <span class="prop">content</span><span class="punc">:</span> <span class="val">''</span><span class="punc">;</span>              <span class="cm">/* obbligatorio */</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">block</span><span class="punc">;</span>
+  <span class="prop">width</span><span class="punc">:</span> <span class="unit">3px</span><span class="punc">;</span>
+  <span class="prop">height</span><span class="punc">:</span> <span class="unit">100%</span><span class="punc">;</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">;</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">absolute</span><span class="punc">;</span>
+  <span class="prop">left</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* ::after con content dinamico da data-attr */</span>
+<span class="sel">[data-tooltip]::after</span> <span class="punc">{</span>
+  <span class="prop">content</span><span class="punc">:</span> <span class="fn">attr</span><span class="punc">(</span><span class="val">data-tooltip</span><span class="punc">);</span>
+<span class="punc">}</span>
+
+<span class="cm">/* ::placeholder — stile del placeholder */</span>
+<span class="sel">input::placeholder</span> <span class="punc">{</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="fn">rgba</span><span class="punc">(</span><span class="unit">255,255,255,.3</span><span class="punc">);</span>
+  <span class="prop">font-style</span><span class="punc">:</span> <span class="val">italic</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* ::selection — testo selezionato */</span>
+<span class="sel">::selection</span> <span class="punc">{</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="val">#C6FF33</span><span class="punc">;</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">#000</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* ::marker — punto delle liste */</span>
+<span class="sel">li::marker</span> <span class="punc">{</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">;</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">1.2em</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* ::first-line, ::first-letter */</span>
+<span class="sel">p::first-letter</span> <span class="punc">{</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">3em</span><span class="punc">;</span>
+  <span class="prop">float</span><span class="punc">:</span> <span class="val">left</span><span class="punc">;</span>
+  <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">0.8</span><span class="punc">;</span>
+<span class="punc">}</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 11 — ANIMAZIONI                   -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="animazioni">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 11</div>
+    <h2 class="chapter-title">Transizioni<br><span>& Animazioni</span></h2>
+    <p class="chapter-intro">Le animazioni CSS sono performanti perché vengono gestite dal compositor del browser sul GPU — senza toccare il main thread. Transition per stati, @keyframes per sequenze, animation-timeline per lo scroll.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Transizioni & @keyframes completo</span>
+      <pre><span class="cm">/* Transition — da stato A a stato B */</span>
+<span class="sel">.btn</span> <span class="punc">{</span>
+  <span class="prop">transition</span><span class="punc">:</span> <span class="val">all</span> <span class="unit">0.3s</span> <span class="fn">ease</span><span class="punc">;</span>
+  <span class="prop">transition</span><span class="punc">:</span>
+    <span class="val">color</span> <span class="unit">0.2s</span> <span class="fn">ease</span><span class="punc">,</span>
+    <span class="val">background</span> <span class="unit">0.2s</span> <span class="fn">ease</span><span class="punc">,</span>
+    <span class="val">transform</span> <span class="unit">0.3s</span> <span class="fn">cubic-bezier</span><span class="punc">(</span><span class="unit">0.34</span><span class="punc">,</span><span class="unit">1.56</span><span class="punc">,</span><span class="unit">0.64</span><span class="punc">,</span><span class="unit">1</span><span class="punc">);</span>
+<span class="punc">}</span>
+<span class="sel">.btn:hover</span> <span class="punc">{</span>
+  <span class="prop">transform</span><span class="punc">:</span> <span class="fn">translateY</span><span class="punc">(-</span><span class="unit">4px</span><span class="punc">)</span> <span class="fn">scale</span><span class="punc">(</span><span class="unit">1.02</span><span class="punc">);</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Proprietà animabili performanti */</span>
+<span class="cm">/* ✓ GPU: transform, opacity, filter */</span>
+<span class="cm">/* ✗ CPU: width, height, margin, padding, top, left */</span>
+
+<span class="cm">/* @keyframes */</span>
+<span class="at">@keyframes</span> <span class="fn">slideIn</span> <span class="punc">{</span>
+  <span class="val">from</span> <span class="punc">{</span>
+    <span class="prop">opacity</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>
+    <span class="prop">transform</span><span class="punc">:</span> <span class="fn">translateY</span><span class="punc">(</span><span class="unit">30px</span><span class="punc">);</span>
+  <span class="punc">}</span>
+  <span class="val">to</span> <span class="punc">{</span>
+    <span class="prop">opacity</span><span class="punc">:</span> <span class="unit">1</span><span class="punc">;</span>
+    <span class="prop">transform</span><span class="punc">:</span> <span class="fn">translateY</span><span class="punc">(</span><span class="unit">0</span><span class="punc">);</span>
+  <span class="punc">}</span>
+<span class="punc">}</span>
+
+<span class="at">@keyframes</span> <span class="fn">shimmer</span> <span class="punc">{</span>
+  <span class="unit">0%</span>   <span class="punc">{</span> <span class="prop">background-position</span><span class="punc">:</span> <span class="unit">-200% 0</span><span class="punc">; }</span>
+  <span class="unit">100%</span> <span class="punc">{</span> <span class="prop">background-position</span><span class="punc">:</span> <span class="unit">200% 0</span><span class="punc">; }</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Applicare animazione */</span>
+<span class="sel">.elemento</span> <span class="punc">{</span>
+  <span class="prop">animation</span><span class="punc">:</span>
+    <span class="fn">slideIn</span> <span class="unit">0.6s</span> <span class="fn">cubic-bezier</span><span class="punc">(</span><span class="unit">.22</span><span class="punc">,</span><span class="unit">1</span><span class="punc">,</span><span class="unit">.36</span><span class="punc">,</span><span class="unit">1</span><span class="punc">)</span> <span class="val">both</span><span class="punc">;</span>
+  <span class="prop">animation-delay</span><span class="punc">:</span> <span class="unit">0.2s</span><span class="punc">;</span>
+  <span class="prop">animation-fill-mode</span><span class="punc">:</span> <span class="val">both</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Scroll-driven animations (CSS 2023) */</span>
+<span class="sel">.progress</span> <span class="punc">{</span>
+  <span class="prop">animation</span><span class="punc">:</span> <span class="fn">grow-bar</span> <span class="val">linear</span><span class="punc">;</span>
+  <span class="prop">animation-timeline</span><span class="punc">:</span> <span class="val">scroll</span><span class="punc">();</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Rispetta preferenze utente */</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">prefers-reduced-motion</span><span class="punc">:</span> <span class="val">reduce</span><span class="punc">) {</span>
+  <span class="sel">*</span> <span class="punc">{</span>
+    <span class="prop">animation-duration</span><span class="punc">:</span> <span class="unit">0.01ms</span> <span class="val">!important</span><span class="punc">;</span>
+    <span class="prop">transition-duration</span><span class="punc">:</span> <span class="unit">0.01ms</span> <span class="val">!important</span><span class="punc">;</span>
+  <span class="punc">}</span>
+<span class="punc">}</span></pre>
+    </div>
+
+    <div class="preview">
+      <div class="preview-label">Demo — Animazioni @keyframes</div>
+      <div style="display:flex;gap:3rem;align-items:center;padding:1rem 0;flex-wrap:wrap" class="preview-inner">
+        <div style="text-align:center">
+          <div class="anim-box anim-spin" style="margin:0 auto 0.8rem"></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(198,255,51,.5)">rotate</span>
+        </div>
+        <div style="text-align:center">
+          <div class="anim-box anim-pulse" style="margin:0 auto 0.8rem;border-radius:50%"></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(198,255,51,.5)">pulse</span>
+        </div>
+        <div style="text-align:center">
+          <div class="anim-box anim-bounce" style="margin:0 auto 0.8rem;border-radius:4px"></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(198,255,51,.5)">bounce</span>
+        </div>
+        <div style="text-align:center">
+          <div style="width:48px;height:48px;margin:0 auto 0.8rem;background:linear-gradient(90deg,transparent,rgba(198,255,51,.4),transparent);background-size:200% 100%;animation:shimmer 2s infinite"></div>
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(198,255,51,.5)">shimmer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 12 — RESPONSIVE                   -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="responsive">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 12</div>
+    <h2 class="chapter-title">Responsive<br><span>Design</span></h2>
+    <p class="chapter-intro">Il responsive design non è solo media query. È un approccio fluido che usa clamp(), unità relative, auto-fit, container queries e la logica mobile-first per creare interfacce che funzionano su qualsiasi schermo.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Media & Container Queries</span>
+      <pre><span class="cm">/* Mobile-first (aggiungi complessità al crescere) */</span>
+<span class="sel">.grid</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="unit">1fr</span><span class="punc">;</span>    <span class="cm">/* mobile: 1 colonna */</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">1rem</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">640px</span><span class="punc">) {</span>
+  <span class="sel">.grid</span> <span class="punc">{</span> <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="fn">repeat</span><span class="punc">(</span><span class="unit">2</span><span class="punc">,</span><span class="unit">1fr</span><span class="punc">); }</span>
+<span class="punc">}</span>
+
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">1024px</span><span class="punc">) {</span>
+  <span class="sel">.grid</span> <span class="punc">{</span> <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="fn">repeat</span><span class="punc">(</span><span class="unit">3</span><span class="punc">,</span><span class="unit">1fr</span><span class="punc">); }</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Range syntax (moderno) */</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="unit">600px</span> <span class="op">&lt;=</span> <span class="prop">width</span> <span class="op">&lt;</span> <span class="unit">1200px</span><span class="punc">) {</span>
+  <span class="cm">/* solo tablet */</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Auto-responsive senza media query */</span>
+<span class="sel">.cards</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span>
+    <span class="fn">repeat</span><span class="punc">(</span><span class="val">auto-fit</span><span class="punc">,</span> <span class="fn">minmax</span><span class="punc">(</span><span class="unit">min(280px, 100%)</span><span class="punc">,</span> <span class="unit">1fr</span><span class="punc">));</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Container Queries (2023) — responsive al container */</span>
+<span class="sel">.sidebar</span> <span class="punc">{</span>
+  <span class="prop">container-type</span><span class="punc">:</span> <span class="val">inline-size</span><span class="punc">;</span>
+  <span class="prop">container-name</span><span class="punc">:</span> <span class="val">sidebar</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="at">@container</span> sidebar <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">400px</span><span class="punc">) {</span>
+  <span class="sel">.card</span> <span class="punc">{</span> <span class="prop">flex-direction</span><span class="punc">:</span> <span class="val">row</span><span class="punc">; }</span>
+<span class="punc">}</span>
+
+<span class="cm">/* Unità viewport moderne */</span>
+<span class="prop">height</span><span class="punc">:</span> <span class="unit">100dvh</span><span class="punc">;</span>   <span class="cm">/* dynamic viewport height */</span>
+<span class="prop">height</span><span class="punc">:</span> <span class="unit">100svh</span><span class="punc">;</span>   <span class="cm">/* small viewport height */</span>
+<span class="prop">height</span><span class="punc">:</span> <span class="unit">100lvh</span><span class="punc">;</span>   <span class="cm">/* large viewport height */</span>
+
+<span class="cm">/* Preferenze sistema */</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">prefers-color-scheme</span><span class="punc">:</span> <span class="val">dark</span><span class="punc">) { }</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">prefers-reduced-motion</span><span class="punc">:</span> <span class="val">reduce</span><span class="punc">) { }</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">prefers-contrast</span><span class="punc">:</span> <span class="val">high</span><span class="punc">) { }</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">hover</span><span class="punc">:</span> <span class="val">none</span><span class="punc">) { }</span>       <span class="cm">/* touch device */</span>
+<span class="at">@media</span> <span class="punc">(</span><span class="prop">pointer</span><span class="punc">:</span> <span class="val">coarse</span><span class="punc">) { }</span>   <span class="cm">/* touch pointer */</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 13 — FUNZIONI CSS                 -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="funzioni">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 13</div>
+    <h2 class="chapter-title">Funzioni<br><span>CSS</span></h2>
+    <p class="chapter-intro">CSS ha un sistema di funzioni sempre più ricco. clamp(), min(), max(), calc(), env(), round() e le nuove funzioni matematiche di CSS Level 4 portano logica computazionale direttamente negli stili.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">Funzioni CSS essenziali e avanzate</span>
+      <pre><span class="cm">/* calc() — calcoli con unità miste */</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">calc</span><span class="punc">(</span><span class="unit">100%</span> <span class="op">-</span> <span class="unit">240px</span><span class="punc">);</span>
+<span class="prop">margin-top</span><span class="punc">:</span> <span class="fn">calc</span><span class="punc">(</span><span class="fn">var</span><span class="punc">(</span><span class="var">--spacing</span><span class="punc">)</span> <span class="op">*</span> <span class="unit">2</span><span class="punc">);</span>
+<span class="prop">font-size</span><span class="punc">:</span> <span class="fn">calc</span><span class="punc">(</span><span class="unit">1rem</span> <span class="op">+</span> <span class="unit">0.5vw</span><span class="punc">);</span>
+
+<span class="cm">/* min() / max() / clamp() */</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">min</span><span class="punc">(</span><span class="unit">600px</span><span class="punc">,</span> <span class="unit">90%</span><span class="punc">);</span>      <span class="cm">/* il più piccolo */</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">max</span><span class="punc">(</span><span class="unit">300px</span><span class="punc">,</span> <span class="unit">50%</span><span class="punc">);</span>      <span class="cm">/* il più grande */</span>
+<span class="prop">font-size</span><span class="punc">:</span> <span class="fn">clamp</span><span class="punc">(</span><span class="unit">1rem</span><span class="punc">,</span> <span class="unit">2.5vw</span><span class="punc">,</span> <span class="unit">2rem</span><span class="punc">);</span>
+<span class="cm">//                 min   fluid   max</span>
+
+<span class="cm">/* Nuove funzioni matematiche CSS Level 4 */</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">round</span><span class="punc">(</span><span class="val">nearest</span><span class="punc">,</span> <span class="unit">1.5rem</span><span class="punc">,</span> <span class="unit">0.5rem</span><span class="punc">);</span>  <span class="cm">/* 1.5 */</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">mod</span><span class="punc">(</span><span class="unit">18px</span><span class="punc">,</span> <span class="unit">5px</span><span class="punc">);</span>    <span class="cm">/* 3px */</span>
+<span class="prop">transform</span><span class="punc">:</span> <span class="fn">rotate</span><span class="punc">(</span><span class="fn">atan2</span><span class="punc">(</span><span class="unit">1</span><span class="punc">,</span> <span class="unit">2</span><span class="punc">));</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="fn">abs</span><span class="punc">(</span><span class="unit">-10px</span><span class="punc">);</span>        <span class="cm">/* 10px */</span>
+<span class="prop">padding</span><span class="punc">:</span> <span class="fn">sign</span><span class="punc">(</span><span class="unit">-5</span><span class="punc">) *</span> <span class="unit">1rem</span><span class="punc">;</span> <span class="cm">/* -1rem */</span>
+
+<span class="cm">/* env() — variabili dell'ambiente (Safe Area iOS) */</span>
+<span class="prop">padding-bottom</span><span class="punc">:</span> <span class="fn">env</span><span class="punc">(</span><span class="val">safe-area-inset-bottom</span><span class="punc">);</span>
+<span class="prop">padding-top</span><span class="punc">:</span> <span class="fn">max</span><span class="punc">(</span><span class="unit">1rem</span><span class="punc">,</span> <span class="fn">env</span><span class="punc">(</span><span class="val">safe-area-inset-top</span><span class="punc">));</span>
+
+<span class="cm">/* transform functions */</span>
+<span class="prop">transform</span><span class="punc">:</span>
+  <span class="fn">translateX</span><span class="punc">(</span><span class="unit">100px</span><span class="punc">)</span>
+  <span class="fn">translateY</span><span class="punc">(-</span><span class="unit">50%</span><span class="punc">)</span>
+  <span class="fn">rotate</span><span class="punc">(</span><span class="unit">45deg</span><span class="punc">)</span>
+  <span class="fn">scale</span><span class="punc">(</span><span class="unit">1.1</span><span class="punc">)</span>
+  <span class="fn">skewX</span><span class="punc">(</span><span class="unit">10deg</span><span class="punc">)</span>
+  <span class="fn">perspective</span><span class="punc">(</span><span class="unit">500px</span><span class="punc">)</span>
+  <span class="fn">rotateY</span><span class="punc">(</span><span class="unit">30deg</span><span class="punc">);</span></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 14 — CSS MODERNO                  -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="modern">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 14</div>
+    <h2 class="chapter-title">CSS<br><span>Moderno</span></h2>
+    <p class="chapter-intro">@layer, @scope, nesting nativo, cascade layers, logical properties, view transitions, anchor positioning — il CSS del 2023–2025 ha aggiunto più funzionalità di qualsiasi altro periodo della sua storia.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="code-block">
+      <span class="code-block-label">CSS Nesting nativo (2023)</span>
+      <pre><span class="cm">/* Prima: Sass/Less. Ora: CSS nativo */</span>
+<span class="sel">.card</span> <span class="punc">{</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="val">#111</span><span class="punc">;</span>
+
+  <span class="cm">/* Nesting — riferisce al genitore con & */</span>
+  <span class="sel">&:hover</span> <span class="punc">{</span>
+    <span class="prop">background</span><span class="punc">:</span> <span class="val">#1a1a1a</span><span class="punc">;</span>
+  <span class="punc">}</span>
+
+  <span class="sel">& .title</span> <span class="punc">{</span>
+    <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">1.5rem</span><span class="punc">;</span>
+  <span class="punc">}</span>
+
+  <span class="sel">& .title:hover</span> <span class="punc">{</span>
+    <span class="prop">color</span><span class="punc">:</span> <span class="val">lime</span><span class="punc">;</span>
+  <span class="punc">}</span>
+
+  <span class="cm">/* Media query annidata */</span>
+  <span class="at">@media</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">768px</span><span class="punc">) {</span>
+    <span class="prop">padding</span><span class="punc">:</span> <span class="unit">3rem</span><span class="punc">;</span>
+  <span class="punc">}</span>
+<span class="punc">}</span></pre>
+    </div>
+
+    <table class="ref-table reveal">
+      <thead><tr><th>Feature</th><th>Descrizione</th><th>Supporto</th></tr></thead>
+      <tbody>
+        <tr><td class="t-name">CSS Nesting</td><td class="t-desc">Nesting nativo senza preprocessori con & come riferimento al genitore</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">@layer</td><td class="t-desc">Cascade Layers — ordine esplicito di priorità delle regole CSS</td><td><span class="t-badge new">2022</span></td></tr>
+        <tr><td class="t-name">@scope</td><td class="t-desc">Limita lo scope degli stili a un sottoalbero del DOM</td><td><span class="t-badge new">2024</span></td></tr>
+        <tr><td class="t-name">:has()</td><td class="t-desc">Selettore genitore — stilizza un elemento in base ai suoi figli</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">Container Queries</td><td class="t-desc">Media query relative al container invece che al viewport</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">View Transitions</td><td class="t-desc">Animazioni di transizione tra pagine o stati dell'app</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">Scroll-driven Animations</td><td class="t-desc">Animazioni guidate dallo scroll con animation-timeline</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">Anchor Positioning</td><td class="t-desc">Posiziona tooltip e popover relativamente a un elemento anchor</td><td><span class="t-badge new">2024</span></td></tr>
+        <tr><td class="t-name">@starting-style</td><td class="t-desc">Definisce lo stile iniziale per transition su display:none → block</td><td><span class="t-badge new">2024</span></td></tr>
+        <tr><td class="t-name">Logical Properties</td><td class="t-desc">margin-inline, padding-block — supporto RTL automatico</td><td><span class="t-badge resp">stabile</span></td></tr>
+        <tr><td class="t-name">color-mix()</td><td class="t-desc">Mescola colori nativamente in qualsiasi spazio colore</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">oklch / oklab</td><td class="t-desc">Spazi colore percettivamente uniformi con wide gamut</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">text-wrap: balance</td><td class="t-desc">Equilibra le righe di testo per una resa tipografica migliore</td><td><span class="t-badge new">2023</span></td></tr>
+        <tr><td class="t-name">dvh / svh / lvh</td><td class="t-desc">Unità viewport dinamiche che tengono conto dell'UI del browser</td><td><span class="t-badge new">2023</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- 15 — BEST PRACTICE                -->
+<!-- ══════════════════════════════════ -->
+<section class="chapter" id="best">
+  <div class="chapter-header reveal">
+    <div class="chapter-num">Capitolo 15</div>
+    <h2 class="chapter-title">Best<br><span>Practice</span></h2>
+    <p class="chapter-intro">CSS scalabile non è solo CSS che funziona — è CSS che rimane manutenibile, performante e leggibile a distanza di mesi. Metodologie, performance, accessibilità e gli errori comuni da evitare.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="grid-2">
+      <div>
+        <h4 class="sub-sub">Scrittura & Organizzazione</h4>
+        <ul class="checklist">
+          <li>Usa sempre <code>box-sizing: border-box</code> globalmente</li>
+          <li>Mobile-first: scrivi il base e aggiungi con min-width</li>
+          <li>Preferisci classi agli ID per gli stili</li>
+          <li>Evita selettori troppo profondi (max 3 livelli)</li>
+          <li>Usa Custom Properties per tutti i valori ripetuti</li>
+          <li>Organizza con @layer: base, components, utilities</li>
+          <li>Usa CSS Nesting per tenere gli stili vicini al componente</li>
+          <li>Commenta le sezioni e le scelte non ovvie</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="sub-sub">Performance</h4>
+        <ul class="checklist">
+          <li>Anima solo <code>transform</code> e <code>opacity</code> (GPU)</li>
+          <li>Usa <code>will-change</code> solo se necessario e rimuovilo dopo</li>
+          <li>Carica i font con <code>font-display: swap</code></li>
+          <li>Usa <code>preconnect</code> per Google Fonts e CDN</li>
+          <li>Evita CSS critici non usati — purga in produzione</li>
+          <li>Usa <code>contain: layout</code> per isolare i layout</li>
+          <li>Preferisci <code>content-visibility: auto</code> per sezioni lunghe</li>
+          <li>Minifica il CSS in produzione</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="sub-sub">Accessibilità</h4>
+        <ul class="checklist">
+          <li>Non rimuovere mai <code>:focus</code> senza alternativa visibile</li>
+          <li>Usa <code>:focus-visible</code> per focus solo da tastiera</li>
+          <li>Contrasto minimo 4.5:1 per testo normale</li>
+          <li>Rispetta <code>prefers-reduced-motion</code></li>
+          <li>Rispetta <code>prefers-color-scheme</code></li>
+          <li>Non usare solo il colore per trasmettere informazioni</li>
+          <li>Evita <code>display:none</code> su skip links (usa sr-only)</li>
+          <li>Test con zoom al 200% senza perdita di funzionalità</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="sub-sub">Errori comuni da evitare</h4>
+        <ul class="checklist">
+          <li>Mai usare <code>!important</code> — risolvi la specificità</li>
+          <li>Mai usare <code>margin: 0 auto</code> su flexbox/grid items</li>
+          <li>Non animare proprietà che causano reflow (width, height)</li>
+          <li>Non usare <code>px</code> per font-size (usa rem)</li>
+          <li>Non bloccare lo scroll nativo con overflow inutili</li>
+          <li>Non usare <code>*</code> per reset pesanti in produzione</li>
+          <li>Non dimenticare il fallback nei gradient con oklch</li>
+          <li>Non usare <code>z-index</code> con valori enormi (999999)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider">Fine Guida</div>
+
+    <div class="callout tip" style="margin-top:0">
+      <div class="callout-label">🚀 Prossimi passi</div>
+      <p>Con CSS solido padroneggiato, esplora i preprocessori come <code>Sass</code> per funzionalità extra, oppure i framework utility-first come <code>Tailwind CSS</code>. Per applicazioni complesse studia i CSS-in-JS e le metodologie <code>BEM</code>, <code>CUBE CSS</code> e <code>ITCSS</code>. La trilogia è completa: HTML struttura, CSS stile, JavaScript comportamento.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">VORTEX</div>
+  <div class="footer-copy">CSS Guide 2025 · CSS Level 4</div>
+</footer>
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Torna in cima">↑</button>
+
+</main>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function aR(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(aR);})();
+document.querySelectorAll('a,button,.info-card,.toc-link').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='22px';cur.style.height='22px';ring.style.opacity='.15';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='12px';cur.style.height='12px';ring.style.opacity='.45';});
+});
+window.addEventListener('scroll',()=>{
+  document.getElementById('pb').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  document.getElementById('btt').classList.toggle('show',window.scrollY>600);
+});
+const sections=document.querySelectorAll('section[id],.chapter[id]');
+const tocLinks=document.querySelectorAll('.toc-link');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      tocLinks.forEach(l=>l.classList.remove('active'));
+      const a=document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if(a){a.classList.add('active');a.scrollIntoView({block:'nearest'});}
+    }
+  });
+},{threshold:0.2,rootMargin:'-64px 0px -50% 0px'});
+sections.forEach(s=>obs.observe(s));
+document.querySelectorAll('.reveal').forEach(el=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('visible');},{threshold:.07}).observe(el);
+});
+</script>
+</body>
+</html>
